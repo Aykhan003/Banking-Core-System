@@ -14,15 +14,26 @@ public class CustomerService : ICustomerService
         _context = context;
     }
 
-    public async Task<Customer> CreateCustomerAsync(string fullName, string email, string phoneNumber)
+    public async Task<Customer> CreateCustomerAsync(string fullName,string finCode, string email, string phoneNumber)
     {
         bool emailExists = await _context.Customers.AnyAsync(c => c.Email == email);
         if (emailExists)
         {
             throw new InvalidOperationException("A customer with the same email already exists.");
         }
+        bool finCodeExists = await _context.Customers.AnyAsync(c => c.FinCode == finCode);
+        if (finCodeExists)
+        {
+            throw new InvalidOperationException("A customer with the same FIN code already exists.");
+        }
+        if (string.IsNullOrWhiteSpace(finCode))
+        {
+            throw new ArgumentException("FIN code cannot be null or empty.");
+        }
+
         var customer = new Customer
         {
+            FinCode = finCode,
             FullName = fullName,
             Email = email,
             PhoneNumber = phoneNumber,

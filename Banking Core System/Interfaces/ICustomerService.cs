@@ -5,7 +5,7 @@ namespace Banking_Core_System.Interfaces;
 
 public interface ICustomerService
 {
-    Task<Customer> CreateCustomerAsync(string fullName, string email, string phoneNumber);
+    Task<Customer> CreateCustomerAsync(string fullName,string finCode, string email, string phoneNumber);
     Task<Customer> UpdateCustomerAsync(int customerId, string fullName, string email, string phoneNumber);
     Task DeleteCustomerAsync(int customerId);
     Task<Customer> GetCustomerAsync(int customerId);
