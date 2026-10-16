@@ -14,6 +14,7 @@ public class BankAccount
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public int RowVersion { get; set; }
     public List<BankCard> BankCards { get; set; } = new List<BankCard>();
+    public List<LedgerEntry> LedgerEntries { get; set; } = new List<LedgerEntry>();
     override public string ToString()
     {
         return $"BankAccount(Id={Id}, CustomerId={CustomerId}, AccountNumber={AccountNumber}, Currency={Currency}, Balance={Balance}, Status={Status}, CreatedAt={CreatedAt})";

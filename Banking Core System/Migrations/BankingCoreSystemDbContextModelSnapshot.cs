@@ -56,7 +56,7 @@ namespace Banking_Core_System.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("BankAccounts", (string)null);
+                    b.ToTable("BankAccounts");
                 });
 
             modelBuilder.Entity("Banking_Core_System.Models.BankCard", b =>
@@ -87,7 +87,7 @@ namespace Banking_Core_System.Migrations
 
                     b.HasIndex("BankAccountId");
 
-                    b.ToTable("BankCards", (string)null);
+                    b.ToTable("BankCards");
                 });
 
             modelBuilder.Entity("Banking_Core_System.Models.Customer", b =>
@@ -121,7 +121,7 @@ namespace Banking_Core_System.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customers", (string)null);
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("Banking_Core_System.Models.LedgerEntry", b =>
@@ -156,7 +156,7 @@ namespace Banking_Core_System.Migrations
 
                     b.HasIndex("TransactionId");
 
-                    b.ToTable("LedgerEntries", (string)null);
+                    b.ToTable("LedgerEntries");
                 });
 
             modelBuilder.Entity("Banking_Core_System.Models.Transaction", b =>
@@ -169,6 +169,9 @@ namespace Banking_Core_System.Migrations
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("BankCardId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("CompletedAt")
                         .HasColumnType("datetime2");
@@ -204,11 +207,13 @@ namespace Banking_Core_System.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BankCardId");
+
                     b.HasIndex("DestinationAccountId");
 
                     b.HasIndex("SourceAccountId");
 
-                    b.ToTable("Transactions", (string)null);
+                    b.ToTable("Transactions");
                 });
 
             modelBuilder.Entity("Banking_Core_System.Models.TransferLimit", b =>
@@ -235,13 +240,13 @@ namespace Banking_Core_System.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("TransferLimits", (string)null);
+                    b.ToTable("TransferLimits");
                 });
 
             modelBuilder.Entity("Banking_Core_System.Models.BankAccount", b =>
                 {
                     b.HasOne("Banking_Core_System.Models.Customer", "Customers")
-                        .WithMany()
+                        .WithMany("BankAccounts")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -252,7 +257,7 @@ namespace Banking_Core_System.Migrations
             modelBuilder.Entity("Banking_Core_System.Models.BankCard", b =>
                 {
                     b.HasOne("Banking_Core_System.Models.BankAccount", "BankAccount")
-                        .WithMany()
+                        .WithMany("BankCards")
                         .HasForeignKey("BankAccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -263,13 +268,13 @@ namespace Banking_Core_System.Migrations
             modelBuilder.Entity("Banking_Core_System.Models.LedgerEntry", b =>
                 {
                     b.HasOne("Banking_Core_System.Models.BankAccount", "BankAccount")
-                        .WithMany()
+                        .WithMany("LedgerEntries")
                         .HasForeignKey("BankAccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Banking_Core_System.Models.Transaction", "Transaction")
-                        .WithMany()
+                        .WithMany("LedgerEntries")
                         .HasForeignKey("TransactionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -281,6 +286,10 @@ namespace Banking_Core_System.Migrations
 
             modelBuilder.Entity("Banking_Core_System.Models.Transaction", b =>
                 {
+                    b.HasOne("Banking_Core_System.Models.BankCard", null)
+                        .WithMany("Transactions")
+                        .HasForeignKey("BankCardId");
+
                     b.HasOne("Banking_Core_System.Models.BankAccount", "DestinationAccount")
                         .WithMany()
                         .HasForeignKey("DestinationAccountId");
@@ -297,12 +306,36 @@ namespace Banking_Core_System.Migrations
             modelBuilder.Entity("Banking_Core_System.Models.TransferLimit", b =>
                 {
                     b.HasOne("Banking_Core_System.Models.Customer", "Customer")
-                        .WithMany()
+                        .WithMany("TransferLimits")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("Banking_Core_System.Models.BankAccount", b =>
+                {
+                    b.Navigation("BankCards");
+
+                    b.Navigation("LedgerEntries");
+                });
+
+            modelBuilder.Entity("Banking_Core_System.Models.BankCard", b =>
+                {
+                    b.Navigation("Transactions");
+                });
+
+            modelBuilder.Entity("Banking_Core_System.Models.Customer", b =>
+                {
+                    b.Navigation("BankAccounts");
+
+                    b.Navigation("TransferLimits");
+                });
+
+            modelBuilder.Entity("Banking_Core_System.Models.Transaction", b =>
+                {
+                    b.Navigation("LedgerEntries");
                 });
 #pragma warning restore 612, 618
         }
