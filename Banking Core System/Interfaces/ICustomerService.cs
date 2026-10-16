@@ -5,14 +5,15 @@ namespace Banking_Core_System.Interfaces;
 
 public interface ICustomerService
 {
-    public Task<Customer> CreateCustomerAsync(string name, string surname, string email, string phoneNumber);
-    public Task<Customer> UpdateCustomerAsync(int customerId, string name, string surname, string email, string phoneNumber);
-    public Task DeleteCustomerAsync(int customerId);
-    public Task<Customer> GetCustomerAsync(int customerId);
-    public Task<List<Customer>> GetAllCustomersAsync();
-    public Task DeactivateCustomerAsync(int customerId);
-    public Task<List<BankAccount>> GetCustomerAllAccountsAsync(int customerId);
-    public Task<List<Transaction>> GetCustomerRecentTransactionsAsync(int customerId, int count);
-    public Task<Dictionary<Currency,decimal>> GetCustomerTotalBalanceByCurrencyAsync(int customerId);
-    public Task<List<BankAccount>> GetAccountWithSuspiciousFailedTransactionsAsync(int failedTransactionThreshold);
+    Task<Customer> CreateCustomerAsync(string fullName, string email, string phoneNumber);
+    Task<Customer> UpdateCustomerAsync(int customerId, string fullName, string email, string phoneNumber);
+    Task DeleteCustomerAsync(int customerId);
+    Task<Customer> GetCustomerAsync(int customerId);
+    Task<List<Customer>> GetAllCustomersAsync();
+    Task DeactivateCustomerAsync(int customerId);
+    Task<List<BankAccount>> GetCustomerAllAccountsAsync(int customerId);
+    Task<List<Transaction>> GetCustomerRecentTransactionsAsync(int customerId, int count);
+    Task<Dictionary<Currency,decimal>> GetCustomerTotalBalanceByCurrencyAsync(int customerId);
+    Task<decimal> GetCustomerTotalBalanceAsync(int customerId);
+    Task<List<BankAccount>> GetAccountWithSuspiciousFailedTransactionsAsync(int failedTransactionThreshold);
 }

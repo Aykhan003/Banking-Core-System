@@ -56,7 +56,7 @@ namespace Banking_Core_System.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("BankAccounts");
+                    b.ToTable("BankAccounts", (string)null);
                 });
 
             modelBuilder.Entity("Banking_Core_System.Models.BankCard", b =>
@@ -87,7 +87,7 @@ namespace Banking_Core_System.Migrations
 
                     b.HasIndex("BankAccountId");
 
-                    b.ToTable("BankCards");
+                    b.ToTable("BankCards", (string)null);
                 });
 
             modelBuilder.Entity("Banking_Core_System.Models.Customer", b =>
@@ -121,7 +121,7 @@ namespace Banking_Core_System.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customers");
+                    b.ToTable("Customers", (string)null);
                 });
 
             modelBuilder.Entity("Banking_Core_System.Models.LedgerEntry", b =>
@@ -156,7 +156,7 @@ namespace Banking_Core_System.Migrations
 
                     b.HasIndex("TransactionId");
 
-                    b.ToTable("LedgerEntries");
+                    b.ToTable("LedgerEntries", (string)null);
                 });
 
             modelBuilder.Entity("Banking_Core_System.Models.Transaction", b =>
@@ -213,7 +213,7 @@ namespace Banking_Core_System.Migrations
 
                     b.HasIndex("SourceAccountId");
 
-                    b.ToTable("Transactions");
+                    b.ToTable("Transactions", (string)null);
                 });
 
             modelBuilder.Entity("Banking_Core_System.Models.TransferLimit", b =>
@@ -240,7 +240,7 @@ namespace Banking_Core_System.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("TransferLimits");
+                    b.ToTable("TransferLimits", (string)null);
                 });
 
             modelBuilder.Entity("Banking_Core_System.Models.BankAccount", b =>
