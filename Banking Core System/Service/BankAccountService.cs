@@ -3,6 +3,7 @@ using Banking_Core_System.Interfaces;
 using Banking_Core_System.Models;
 using Microsoft.EntityFrameworkCore;
 using Banking_Core_System.Enums;
+using Banking_Core_System.Exceptions;
 
 namespace Banking_Core_System.Service;
 
@@ -19,7 +20,11 @@ public class BankAccountService : IBankAccountService
         var bankAccount = await _context.BankAccounts.FirstOrDefaultAsync(a => a.Id == accountId);
         if (bankAccount == null)
         {
-            throw new InvalidOperationException("Bank account not found.");
+            throw new AccountNotFoundException("Bank account not found.");
+        }
+        if (bankAccount.Status == Status.Closed)
+        {
+            throw new AccountClosedException("Bank account is already closed.");
         }
         bankAccount.Status = Status.Closed;
         await _context.SaveChangesAsync();
@@ -45,7 +50,7 @@ public class BankAccountService : IBankAccountService
         var bankAccount = await _context.BankAccounts.FirstOrDefaultAsync(a => a.Id == accountId);
         if (bankAccount == null)
         {
-            throw new InvalidOperationException("Bank account not found.");
+            throw new AccountNotFoundException("Bank account not found.");
         }
         _context.BankAccounts.Remove(bankAccount);
         await _context.SaveChangesAsync();
@@ -56,7 +61,7 @@ public class BankAccountService : IBankAccountService
         var bankAccount = await _context.BankAccounts.FirstOrDefaultAsync(a => a.Id == accountId);
         if (bankAccount == null)
         {
-            throw new InvalidOperationException("Bank account not found.");
+            throw new AccountNotFoundException("Bank account not found.");
         }
         bankAccount.Status = Status.Frozen;
         await _context.SaveChangesAsync();
@@ -67,7 +72,7 @@ public class BankAccountService : IBankAccountService
         var bankAccount = await _context.BankAccounts.FirstOrDefaultAsync(a => a.Id == accountId);
         if (bankAccount == null)
         {
-            throw new InvalidOperationException("Bank account not found.");
+            throw new AccountNotFoundException("Bank account not found.");
         }
         return bankAccount.Balance;
     }
@@ -77,7 +82,7 @@ public class BankAccountService : IBankAccountService
         var bankAccount = await _context.BankAccounts.FirstOrDefaultAsync(a => a.Id == accountId);
         if (bankAccount == null)
         {
-            throw new InvalidOperationException("Bank account not found.");
+            throw new AccountNotFoundException("Bank account not found.");
         }
         return bankAccount;
     }
@@ -92,7 +97,7 @@ public class BankAccountService : IBankAccountService
         var bankAccount = await _context.BankAccounts.FirstOrDefaultAsync(a => a.Id == accountId);
         if (bankAccount == null)
         {
-            throw new InvalidOperationException("Bank account not found.");
+            throw new AccountNotFoundException("Bank account not found.");
         }
         return bankAccount;
     }
@@ -102,7 +107,11 @@ public class BankAccountService : IBankAccountService
         var bankAccount = await _context.BankAccounts.FirstOrDefaultAsync(a => a.Id == accountId);
         if (bankAccount == null)
         {
-            throw new InvalidOperationException("Bank account not found.");
+            throw new AccountNotFoundException("Bank account not found.");
+        }
+        if (bankAccount.Status != Status.Frozen)
+        {
+            throw new AccountFrozenException("Bank account is not frozen.");
         }
         bankAccount.Status = Status.Active;
         await _context.SaveChangesAsync();
@@ -117,7 +126,7 @@ public class BankAccountService : IBankAccountService
         var existingAccount = await _context.BankAccounts.FirstOrDefaultAsync(a => a.Id == bankAccount.Id);
         if (existingAccount == null)
         {
-            throw new InvalidOperationException("Bank account not found.");
+            throw new AccountNotFoundException("Bank account not found.");
         }
         existingAccount.AccountNumber = bankAccount.AccountNumber;
         existingAccount.Balance = bankAccount.Balance;
