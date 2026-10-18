@@ -56,7 +56,7 @@ namespace Banking_Core_System.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("BankAccounts", (string)null);
+                    b.ToTable("BankAccounts");
                 });
 
             modelBuilder.Entity("Banking_Core_System.Models.BankCard", b =>
@@ -87,7 +87,7 @@ namespace Banking_Core_System.Migrations
 
                     b.HasIndex("BankAccountId");
 
-                    b.ToTable("BankCards", (string)null);
+                    b.ToTable("BankCards");
                 });
 
             modelBuilder.Entity("Banking_Core_System.Models.Customer", b =>
@@ -121,7 +121,7 @@ namespace Banking_Core_System.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customers", (string)null);
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("Banking_Core_System.Models.LedgerEntry", b =>
@@ -150,13 +150,18 @@ namespace Banking_Core_System.Migrations
                     b.Property<int>("TransactionId")
                         .HasColumnType("int");
 
+                    b.Property<int>("TransactionId1")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("BankAccountId");
 
                     b.HasIndex("TransactionId");
 
-                    b.ToTable("LedgerEntries", (string)null);
+                    b.HasIndex("TransactionId1");
+
+                    b.ToTable("LedgerEntries");
                 });
 
             modelBuilder.Entity("Banking_Core_System.Models.Transaction", b =>
@@ -190,11 +195,11 @@ namespace Banking_Core_System.Migrations
 
                     b.Property<string>("IdempotencyKey")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ReferenceNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("SourceAccountId")
                         .HasColumnType("int");
@@ -211,9 +216,15 @@ namespace Banking_Core_System.Migrations
 
                     b.HasIndex("DestinationAccountId");
 
+                    b.HasIndex("IdempotencyKey")
+                        .IsUnique();
+
+                    b.HasIndex("ReferenceNumber")
+                        .IsUnique();
+
                     b.HasIndex("SourceAccountId");
 
-                    b.ToTable("Transactions", (string)null);
+                    b.ToTable("Transactions");
                 });
 
             modelBuilder.Entity("Banking_Core_System.Models.TransferLimit", b =>
@@ -240,7 +251,7 @@ namespace Banking_Core_System.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("TransferLimits", (string)null);
+                    b.ToTable("TransferLimits");
                 });
 
             modelBuilder.Entity("Banking_Core_System.Models.BankAccount", b =>
@@ -273,9 +284,15 @@ namespace Banking_Core_System.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Banking_Core_System.Models.Transaction", "Transaction")
+                    b.HasOne("Banking_Core_System.Models.Transaction", null)
                         .WithMany("LedgerEntries")
                         .HasForeignKey("TransactionId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Banking_Core_System.Models.Transaction", "Transaction")
+                        .WithMany()
+                        .HasForeignKey("TransactionId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -286,17 +303,22 @@ namespace Banking_Core_System.Migrations
 
             modelBuilder.Entity("Banking_Core_System.Models.Transaction", b =>
                 {
-                    b.HasOne("Banking_Core_System.Models.BankCard", null)
+                    b.HasOne("Banking_Core_System.Models.BankCard", "BankCard")
                         .WithMany("Transactions")
-                        .HasForeignKey("BankCardId");
+                        .HasForeignKey("BankCardId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("Banking_Core_System.Models.BankAccount", "DestinationAccount")
                         .WithMany()
-                        .HasForeignKey("DestinationAccountId");
+                        .HasForeignKey("DestinationAccountId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Banking_Core_System.Models.BankAccount", "SourceAccount")
                         .WithMany()
-                        .HasForeignKey("SourceAccountId");
+                        .HasForeignKey("SourceAccountId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("BankCard");
 
                     b.Navigation("DestinationAccount");
 

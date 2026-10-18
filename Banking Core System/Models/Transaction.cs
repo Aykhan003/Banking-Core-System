@@ -10,6 +10,8 @@ public class Transaction
     public BankAccount? SourceAccount { get; set; }
     public int? DestinationAccountId { get; set; }
     public BankAccount? DestinationAccount { get; set; }
+    public int? BankCardId { get; set; }
+    public BankCard? BankCard { get; set; }
     public decimal Amount { get; set; }
     public decimal Fee { get; set; }
     public Currency Currency { get; set; }
